@@ -55,7 +55,25 @@ def getMik(matriz):
         mik = matriz[n-1][n-1] + dk + math.sqrt(dk**2 + matriz[n-1][n-2]**2)
     return mik
 
-Q, R = getQRDecomposition(test)
-print(Q)
-print(R)
-print(Q @ R)
+def QRAlgorithm(matriz):
+    '''Executa o algorítmo QR sem deslocamento espectral'''
+    A = matriz
+    V = np.identity(len(A))
+    k = 0
+    while True:
+        Q, R = getQRDecomposition(A)
+        A = R @ Q
+        V = V @ Q
+        k += 1
+        print("A")
+        print(A.round(2))
+        print("V")
+        print(V.round(2))
+        if abs(A[1][0]) < 0.001:
+            break
+
+#Q, R = getQRDecomposition(test)
+#print(Q)
+#print(R)
+#print(Q @ R)
+QRAlgorithm(test)
