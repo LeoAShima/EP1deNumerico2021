@@ -1,6 +1,6 @@
 # EP1 de Numérico 2021
 
-Este repositório contém o código em Python do algorítmo QR com deslocamento
+Esta pasta contém o código em Python do algorítmo QR com deslocamento
 espectral para o cálculo dos auto-valores e auto-vetores de uma matriz
 tridiagonal simétrica n × n.
 
