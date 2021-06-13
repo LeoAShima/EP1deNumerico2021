@@ -1,16 +1,17 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
-float** criarMatriz(int tamanho)
+double** criarMatriz(int tamanho)
 {
-    float **matriz = malloc(tamanho * sizeof(*matriz));
+    double **matriz = malloc(tamanho * sizeof(*matriz));
     for (int i = 0; i < tamanho; i++) {
         matriz[i] = malloc(tamanho * sizeof(*matriz[i]));
     }
     return matriz;
 }
 
-float** destruirMatriz(float **matriz, int tamanho)
+double** destruirMatriz(double **matriz, int tamanho)
 {
     for (int i = 0; i < tamanho; i++) {
         free(matriz[i]);
@@ -18,16 +19,16 @@ float** destruirMatriz(float **matriz, int tamanho)
     free(matriz);
 }
 
-void lerMatriz(float **matriz, int tamanho)
+void lerMatriz(double **matriz, int tamanho)
 {
     for (int i = 0; i < tamanho; i++) {
         for (int j = 0; j < tamanho; j++) {
-            scanf("%f", &matriz[i][j]);
+            scanf("%lf", &matriz[i][j]);
         }
     }
 }
 
-void printMatriz(float **matriz, int tamanho)
+void printMatriz(double **matriz, int tamanho)
 {
     for (int i = 0; i < tamanho; i++) {
         for (int j = 0; j < tamanho; j++) {
@@ -37,14 +38,40 @@ void printMatriz(float **matriz, int tamanho)
     }
 }
 
+void getCSParameters(double alpha, double beta, double *c, double *s)
+{
+    if (fabs(alpha) > fabs(beta)) {
+        float tau = -beta/alpha;
+        *c = 1/sqrt(1+pow(tau, 2));
+        *s = *c*tau;
+    } else {
+        float tau = -alpha/beta;
+        *s = 1/sqrt(1+pow(tau, 2));
+        *c = *s*tau;
+    }
+}
+
+void getQRDecomposition(double **matriz, int tamanho, double *c, double *s)
+{
+    for (int i = 0; i < tamanho-1; i++) {
+        getCSParameters(matriz[i][i], matriz[i+1][i], &c[i], &s[i]);
+        printf("i=%d c=%f d=%f\n", i, c[i], s[i]);
+    }
+}
+
 int main()
 {
     int tamanho;
     scanf("%d", &tamanho);
-    float **matriz = criarMatriz(tamanho);
+    double **matriz = criarMatriz(tamanho);
     lerMatriz(matriz, tamanho);
-    printMatriz(matriz, tamanho);
+    //printMatriz(matriz, tamanho);
+    double *c = malloc((tamanho-1) * sizeof(double));
+    double *s = malloc((tamanho-1) * sizeof(double));
+    getQRDecomposition(matriz, tamanho, c, s);
 
+    free(c);
+    free(s);
     destruirMatriz(matriz, tamanho);
     return 0;
 }
