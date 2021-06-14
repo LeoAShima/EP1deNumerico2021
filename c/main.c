@@ -28,11 +28,11 @@ void lerMatriz(double **matriz, int tamanho)
     }
 }
 
-void printMatriz(double **matriz, int tamanho)
+void printMatriz(double **matriz, int tamanho, int precisao)
 {
     for (int i = 0; i < tamanho; i++) {
         for (int j = 0; j < tamanho; j++) {
-            printf("%.*f\t", 3, matriz[i][j]);
+            printf("%.*f\t", precisao, matriz[i][j]);
         }
         printf("\n");
     }
@@ -51,11 +51,22 @@ void getCSParameters(double alpha, double beta, double *c, double *s)
     }
 }
 
+void applyGivens(double **matriz, int tamanho, int i, double c, double s)
+{
+    for (int j = 0; j < tamanho; j++) {
+        double matriz1j = matriz[i][j];
+        double matriz2j = matriz[i+1][j];
+        matriz[i][j] = c*matriz1j-s*matriz2j;
+        matriz[i+1][j] = s*matriz1j+c*matriz2j;
+    }
+}
+
 void getQRDecomposition(double **matriz, int tamanho, double *c, double *s)
 {
     for (int i = 0; i < tamanho-1; i++) {
         getCSParameters(matriz[i][i], matriz[i+1][i], &c[i], &s[i]);
-        printf("i=%d c=%f d=%f\n", i, c[i], s[i]);
+        applyGivens(matriz, tamanho, i, c[i], s[i]);
+        //printf("i=%d c=%f d=%f\n", i, c[i], s[i]);
     }
 }
 
@@ -69,6 +80,7 @@ int main()
     double *c = malloc((tamanho-1) * sizeof(double));
     double *s = malloc((tamanho-1) * sizeof(double));
     getQRDecomposition(matriz, tamanho, c, s);
+    printMatriz(matriz, tamanho, 3);
 
     free(c);
     free(s);
