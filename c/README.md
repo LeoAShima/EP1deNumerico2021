@@ -40,11 +40,6 @@ Esta função imprime os valores armazenados na matriz.
 | tamanho | *int*<br>Tamanho da matriz a ser impressa |
 | precisao | *int*<br>Quantidade de digitos após a vírgula a serem exibidos |
 
-### **getGivensMatrix(matriz, linha)**
-Esta função recebe uma matriz quadrada e o número do elemento da diagonal
-principal (matriz[linha][linha]). A função retorna uma matriz de rotação de
-Givens que zera o valor do elemento abaixo do elemento da diagonal principal
-(matriz[linha][linha+1]).
 
 ## Decomposição QR
 ### **getQRDecomposition(double \*\*matriz, int tamanho, double \*c, double \*s)**
