@@ -70,6 +70,16 @@ void getQRDecomposition(double **matriz, int tamanho, double *c, double *s)
     }
 }
 
+double getMiK(double **matriz, int tamanho)
+{
+    double dk = (matriz[tamanho-2][tamanho-2] - matriz[tamanho-1][tamanho-1])/2;
+    if (dk >= 0) {
+        return matriz[tamanho-1][tamanho-1] + dk - sqrt(pow(dk,2) + pow(matriz[tamanho-1][tamanho-2],2));
+    } else {
+        return matriz[tamanho-1][tamanho-1] + dk + sqrt(pow(dk,2) + pow(matriz[tamanho-1][tamanho-2],2));
+    }
+}
+
 int main()
 {
     int tamanho;
