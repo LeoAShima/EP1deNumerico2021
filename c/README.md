@@ -74,3 +74,13 @@ matriz recebida, alterando as linhas i e i+1.
 | i | *int*<br>Linha da matriz que será alterada, juntamente com i+1. |
 | c | *double*<br>Parâmetro *c* da rotação de Givens a ser aplicada. |
 | s | *double*<br>Parâmetro *s* da rotação de Givens a ser aplicada. |
+
+
+## Algoritmo QR
+### **getMiK(double \*\*matriz, int tamanho)**
+Esta função calcula o valor μ<sub>k</sub> a ser subtraído da diagonal principal
+no algoritmo QR para acelerar a convergência.
+| Nome | Descrição |
+| ---- | --------- |
+| matriz | *double\*\**<br>Ponteiro da matriz. |
+| tamanho | *int*<br>Tamanho da matriz a ser considerada.<br>Se o valor for menor que o tamanho total da matriz, serão utilizados para o cálculo apenas o subconjunto de elementos dentro da matriz de dimensão *tamanho* x *tamanho*. |
