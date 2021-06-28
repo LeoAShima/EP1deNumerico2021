@@ -113,7 +113,7 @@ double getMiK(double **matriz, int tamanho)
 
 void addDiagonal(double **matriz, int tamanho, double MiK)
 {
-    for (int i = 0; i < tamanho-1; i++) {
+    for (int i = 0; i < tamanho; i++) {
         matriz[i][i] += MiK;
     }
 }
