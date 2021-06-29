@@ -60,7 +60,7 @@ void printMatriz(double **matriz, int tamanho, int precisao)
 {
     for (int i = 0; i < tamanho; i++) {
         for (int j = 0; j < tamanho; j++) {
-            printf("%.*f\t", precisao, matriz[i][j]);
+            printf("% .*f\t", precisao, matriz[i][j]);
         }
         printf("\n");
     }
