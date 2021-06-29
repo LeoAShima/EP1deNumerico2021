@@ -24,6 +24,21 @@ void setIdentidade(double **matriz, int tamanho)
     }
 }
 
+void setMatrizTesteA(double **matriz, int tamanho)
+{
+    for (int i = 0; i < tamanho; i++) {
+        for (int j = 0; j < tamanho; j++) {
+            if (j == i+1 || i == j+1) {
+                matriz[i][j] = -1;
+            } else if (i == j) {
+                matriz[i][j] = 2;
+            } else {
+                matriz[i][j] = 0;
+            }
+        }
+    }
+}
+
 double** destruirMatriz(double **matriz, int tamanho)
 {
     for (int i = 0; i < tamanho; i++) {
