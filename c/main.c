@@ -168,8 +168,44 @@ int metodoQR(double **matriz, double **V, int tamanho, double precisao, int desl
     free(s);
     return k;
 }
+
+void tarefaA()
+{
+    printf("Digite o tamanho da matriz a ser testada: ");
+    int tamanho;
+    scanf("%d", &tamanho);
+    double **matriz = criarMatriz(tamanho);
+    double **V = criarMatriz(tamanho);
+    setIdentidade(V, tamanho);
+    setMatrizTesteA(matriz, tamanho);
+
+    int qtdIteracoes = metodoQR(matriz, V, tamanho, 0.000001, 0);
+    printf("\nMetodo QR sem deslocamento espectral\n");
+    printf("Convergiu em %d iteracoes\n", qtdIteracoes);
+    printf("Autovalores:\n");
+    printAutovalores(matriz, tamanho, 3);
+    printf("Autovetores:\n");
+    printMatriz(V, tamanho, 3);
+    
+    setIdentidade(V, tamanho);
+    setMatrizTesteA(matriz, tamanho);
+    qtdIteracoes = metodoQR(matriz, V, tamanho, 0.000001, 1);
+    printf("\nMetodo QR com deslocamento espectral\n");
+    printf("Convergiu em %d iteracoes\n", qtdIteracoes);
+    printf("Autovalores:\n");
+    printAutovalores(matriz, tamanho, 3);
+    printf("Autovetores:\n");
+    printMatriz(V, tamanho, 3);
+    
+    destruirMatriz(matriz, tamanho);
+    destruirMatriz(V, tamanho);
+}
+
+
 int main()
 {
+    tarefaA();
+    return 0;
     int tamanho;
     scanf("%d", &tamanho);
     double **matriz = criarMatriz(tamanho);
