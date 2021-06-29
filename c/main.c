@@ -159,7 +159,7 @@ int metodoQR(double **matriz, double **V, int tamanho, double precisao, int desl
             getQRDecomposition(matriz, m+1, c, s);
             mulRightQ(matriz, m+1, c, s);
             addDiagonal(matriz, m+1, MiK);
-            mulRightQ(V, m+1, c, s);
+            mulRightQ(V, tamanho, c, s);
             k++;
         } while (fabs(matriz[m][m-1]) > precisao && k < 9999);
     }
