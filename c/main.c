@@ -118,6 +118,32 @@ void addDiagonal(double **matriz, int tamanho, double MiK)
     }
 }
 
+int metodoQR(double **matriz, double **V, int tamanho, double precisao, int deslocamento)
+{
+    double *c = malloc((tamanho-1) * sizeof(double));
+    double *s = malloc((tamanho-1) * sizeof(double));
+ 
+    int k = 0;
+    double MiK = 0;
+
+    for (int m = tamanho-1; m > 0; m--) {
+        do {
+            if (k > 0 && deslocamento != 0) {
+                MiK = getMiK(matriz, m+1);
+            }
+            addDiagonal(matriz, m+1, -MiK);
+            getQRDecomposition(matriz, m+1, c, s);
+            mulRightQ(matriz, m+1, c, s);
+            addDiagonal(matriz, m+1, MiK);
+            mulRightQ(V, m+1, c, s);
+            k++;
+        } while (fabs(matriz[m][m-1]) > precisao && k < 9999);
+    }
+
+    free(c);
+    free(s);
+    return k;
+}
 int main()
 {
     int tamanho;
