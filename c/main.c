@@ -66,6 +66,15 @@ void printMatriz(double **matriz, int tamanho, int precisao)
     }
 }
 
+void printAutovalores(double **matriz, int tamanho, int precisao)
+{
+    for (int i = 0; i < tamanho; i++) {
+        printf("%.*f", precisao, matriz[i][i]);
+        if (i < tamanho-1) printf(" / ");
+    }
+    printf("\n");
+}
+
 void getCSParameters(double alpha, double beta, double *c, double *s)
 {
     if (fabs(alpha) > fabs(beta)) {
