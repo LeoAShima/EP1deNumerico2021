@@ -44,7 +44,7 @@ def getQRDecomposition(matriz):
         Qt = Qi @ Qt
     return Qt.transpose(), matriz
 
-def getMik(matriz):
+def getMik(matriz, n):
     '''Calcula o múltiplo da identidade µk que será utilizado no algoritmo QR
     com deslocamento espectral.'''
     n = len(matriz)
