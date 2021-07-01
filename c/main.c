@@ -131,7 +131,6 @@ void getQRDecomposition(double **matriz, int tamanho, double *c, double *s)
     for (int i = 0; i < tamanho-1; i++) {
         getCSParameters(matriz[i][i], matriz[i+1][i], &c[i], &s[i]);
         applyGivens(matriz, tamanho, i, c[i], s[i]);
-        //printf("i=%d c=%f d=%f\n", i, c[i], s[i]);
     }
 }
 
@@ -225,15 +224,11 @@ void escreverMatrizA(double **A, int tamanho, double massa, double *k)
 // Realiza a multiplicacao Q^T * X
 void QTX(double **Q, int tamanho, double *x, double *y)
 {
-    //printMatriz(Q, tamanho, 3);
     for (int i = 0; i < tamanho; i++) {
         y[i] = 0;
         for (int j = 0; j < tamanho; j++) {
             y[i] += Q[j][i] * x[j];
-            //printf("Qji=%f, xi=%f\n",Q[j][i],x[i]);
-            //printf("i=%d, xi=%f\n",i,x[i]);
         }
-        //printf("i=%d, xi=%f\n",i,x[i]);
         printf("i=%d, yi=%f\n",i,y[i]);
     }
 }
