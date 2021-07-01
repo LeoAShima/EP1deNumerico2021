@@ -8,6 +8,11 @@ double** criarMatriz(int tamanho)
     for (int i = 0; i < tamanho; i++) {
         matriz[i] = malloc(tamanho * sizeof(*matriz[i]));
     }
+    for (int i = 0; i < tamanho; i++) {
+        for (int j = 0; j < tamanho; j++) {
+            matriz[i][j] = 0;
+        }
+    }
     return matriz;
 }
 
@@ -201,10 +206,94 @@ void tarefaA()
     destruirMatriz(V, tamanho);
 }
 
+void escreverMatrizA(double **A, int tamanho, double massa, double *k)
+{
+    int i = 0;
+    for (i = 0; i < tamanho-1; i++) {
+        A[i][i] = (k[i] + k[i+1])/massa;
+        A[i][i+1] = (-1*k[i+1])/massa;
+        A[i+1][i] = (-1*k[i+1])/massa;
+    }
+    A[i][i] = (k[i] + k[i+1])/massa;
+}
+
+// Realiza a multiplicacao Q^T * X
+void QTX(double **Q, int tamanho, double *x, double *y)
+{
+    //printMatriz(Q, tamanho, 3);
+    for (int i = 0; i < tamanho; i++) {
+        y[i] = 0;
+        for (int j = 0; j < tamanho; j++) {
+            y[i] += Q[j][i] * x[j];
+            //printf("Qji=%f, xi=%f\n",Q[j][i],x[i]);
+            //printf("i=%d, xi=%f\n",i,x[i]);
+        }
+        //printf("i=%d, xi=%f\n",i,x[i]);
+        printf("i=%d, yi=%f\n",i,y[i]);
+    }
+}
+
+void tarefaB()
+{
+    int numMassas = 5;
+    double massa = 2;
+    double *x = malloc((numMassas) * sizeof(double));
+    double *y = malloc((numMassas) * sizeof(double));
+
+    //TODO: Ler valores de massa
+    x[0] = -2;
+    x[1] = -3;
+    x[2] = -1;
+    x[3] = -3;
+    x[4] = -1;
+
+    double *k = malloc((numMassas+1) * sizeof(double));
+    for (int i = 0; i < numMassas+1; i++) {
+        k[i] = 40 + 2*i;
+    }
+
+    double **A = criarMatriz(numMassas);
+    double **Q = criarMatriz(numMassas);
+    escreverMatrizA(A, numMassas, massa, k);
+    setIdentidade(Q, numMassas);
+    metodoQR(A, Q, numMassas, 0.000001, 1); //Apos chamada, A se torna LAMBDA
+    //printMatriz(Q, numMassas, 3);
+    QTX(Q, numMassas, x, y); //obtem y0 a partir de x0, Q contem autovetores
+
+    //debug start
+    for (int i = 0; i < numMassas; i++) { //Para cada x
+            double xres = 0; //Contem valor de x_i no instante t;
+            for (int l = 0; l < numMassas; l++) {
+                xres += Q[i][l] * y[l];
+            }
+            printf("x_%d(0) = %.*f\n",i,3,xres);
+    }
+    //debug end 
+
+
+    for (int i = 0; i < numMassas; i++) { //Para cada x
+        printf("x_%d = [", i);
+        for (int j = 0; j < 401; j++) { //Imprimir 400 valores de x(t)
+            double xres = 0; //Contem valor de x_i no instante t;
+            for (int l = 0; l < numMassas; l++) {
+                xres += Q[i][l] * y[l]*cos(sqrt(A[l][l])*j*0.025);
+            }
+            printf("%.*f ",3,xres);
+        }
+        printf("]\n");
+    }
+
+
+    destruirMatriz(A, numMassas);
+    destruirMatriz(Q, numMassas);
+    free(x);
+    free(y);
+}
 
 int main()
 {
-    tarefaA();
+    //tarefaA();
+    tarefaB();
     return 0;
     int tamanho;
     scanf("%d", &tamanho);
