@@ -1,0 +1,15 @@
+Nesta pasta temos os códigos em C e o relatório para o primeiro Exercicio
+Computacional de Cálculo Numérico, feitos por:
+Bruno Carneiro Camara - 11257230
+Leonardo Akira Shimabukuro - 9838053
+
+A compilação no Windows foi realizada utilizando o compilador gcc versão 6.3.0
+do Mingw. A compilação no Linux foi realizada utlizando o compilador gcc versão
+9.3.0 no Ubuntu 20.04.
+
+No Windows, a compilação pode ser feita utilizando o comando
+gcc main.c -o main.exe
+
+No Linux, o comando utilizado foi
+gcc main.c -o main -lm
+A flag lm foi necessária para linkar as bibliotecas de matemática.
