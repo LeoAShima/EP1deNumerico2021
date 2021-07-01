@@ -1,3 +1,8 @@
+// Exercicio Programa 1 - Calculo Numerico
+
+// Bruno Carneiro Camara - 11257230
+// Leonardo Akira Shimabukuro - 9838053
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -240,12 +245,10 @@ void tarefaB()
     double *x = malloc((numMassas) * sizeof(double));
     double *y = malloc((numMassas) * sizeof(double));
 
-    //TODO: Ler valores de massa
-    x[0] = -2;
-    x[1] = -3;
-    x[2] = -1;
-    x[3] = -3;
-    x[4] = -1;
+    printf("Digite as posicoes iniciais:\n");
+    for (int i = 0; i < numMassas; i++) {
+        scanf("%lf", &x[i]);
+    }
 
     double *k = malloc((numMassas+1) * sizeof(double));
     for (int i = 0; i < numMassas+1; i++) {
@@ -257,19 +260,12 @@ void tarefaB()
     escreverMatrizA(A, numMassas, massa, k);
     setIdentidade(Q, numMassas);
     metodoQR(A, Q, numMassas, 0.000001, 1); //Apos chamada, A se torna LAMBDA
-    //printMatriz(Q, numMassas, 3);
+    printf("Matriz de autovalores:\n");
+    printAutovalores(A, numMassas, 3);
+    printf("\nMatriz de autovetores:\n");
+    printMatriz(Q, numMassas, 3);
+
     QTX(Q, numMassas, x, y); //obtem y0 a partir de x0, Q contem autovetores
-
-    //debug start
-    for (int i = 0; i < numMassas; i++) { //Para cada x
-            double xres = 0; //Contem valor de x_i no instante t;
-            for (int l = 0; l < numMassas; l++) {
-                xres += Q[i][l] * y[l];
-            }
-            printf("x_%d(0) = %.*f\n",i,3,xres);
-    }
-    //debug end 
-
 
     for (int i = 0; i < numMassas; i++) { //Para cada x
         printf("x_%d = [", i);
@@ -290,49 +286,97 @@ void tarefaB()
     free(y);
 }
 
-int main()
+void tarefaC()
 {
-    //tarefaA();
-    tarefaB();
-    return 0;
+    int numMassas = 10;
+    double massa = 2;
+    double *x = malloc((numMassas) * sizeof(double));
+    double *y = malloc((numMassas) * sizeof(double));
+
+    printf("Digite as posicoes iniciais:\n");
+    for (int i = 0; i < numMassas/2; i++) {
+        scanf("%lf", &x[i]);
+        x[i+5] = x[i];
+    }
+
+    double *k = malloc((numMassas+1) * sizeof(double));
+    for (int i = 0; i < numMassas+1; i++) {
+        k[i] = 40 + 2*pow(-1,i);
+    }
+
+    double **A = criarMatriz(numMassas);
+    double **Q = criarMatriz(numMassas);
+    escreverMatrizA(A, numMassas, massa, k);
+    setIdentidade(Q, numMassas);
+    metodoQR(A, Q, numMassas, 0.000001, 1); //Apos chamada, A se torna LAMBDA
+    printf("Matriz de autovalores:\n");
+    printMatriz(A, numMassas, 3);
+    printf("\nMatriz de autovetores:\n");
+    printMatriz(Q, numMassas, 3);
+
+    QTX(Q, numMassas, x, y); //obtem y0 a partir de x0, Q contem autovetores
+
+    for (int i = 0; i < numMassas; i++) { //Para cada x
+        printf("x_%d = [", i);
+        for (int j = 0; j < 401; j++) { //Imprimir 400 valores de x(t)
+            double xres = 0; //Contem valor de x_i no instante t;
+            for (int l = 0; l < numMassas; l++) {
+                xres += Q[i][l] * y[l]*cos(sqrt(A[l][l])*j*0.025);
+            }
+            printf("%.*f ",3,xres);
+        }
+        printf("]\n");
+    }
+
+
+    destruirMatriz(A, numMassas);
+    destruirMatriz(Q, numMassas);
+    free(x);
+    free(y);
+}
+
+void aplicarMetodoQR()
+{
+    int deslocamento;
+    printf("Deseja utilizar o deslocamento espectral?\n");
+    printf("\t0 - Nao\n\t1 - Sim\n");
+    printf("Opcao: ");
+    scanf("%d", &deslocamento);
+    printf("Digite o tamanho da matriz a ser testada: ");
     int tamanho;
     scanf("%d", &tamanho);
     double **matriz = criarMatriz(tamanho);
     double **V = criarMatriz(tamanho);
     setIdentidade(V, tamanho);
+    printf("Digite a matriz:\n");
     lerMatriz(matriz, tamanho);
-    //printMatriz(matriz, tamanho);
-    double *c = malloc((tamanho-1) * sizeof(double));
-    double *s = malloc((tamanho-1) * sizeof(double));
-    //getQRDecomposition(matriz, tamanho, c, s);
-    //printMatriz(matriz, tamanho, 3);
 
-    int k = 0;
-    double MiK = 0;
-
-    for (int m = tamanho-1; m > 0; m--) {
-        do {
-            if (k > 0) {
-                MiK = getMiK(matriz, m+1);
-            }
-            addDiagonal(matriz, m+1, -MiK);
-            getQRDecomposition(matriz, m+1, c, s);
-            mulRightQ(matriz, m+1, c, s);
-            addDiagonal(matriz, m+1, MiK);
-            mulRightQ(V, m+1, c, s);
-            k++;
-        } while (fabs(matriz[m][m-1]) > 0.001 && k < 9999);
-        printf("Convergiu m=%d k=%d\n",m,k);
-        printMatriz(matriz, tamanho, 3);
-    }
-
-    printf("k = %d\n", k);
-    printMatriz(matriz, tamanho, 3);
+    int qtdIteracoes = metodoQR(matriz, V, tamanho, 0.000001, deslocamento);
+    printf("Convergiu em %d iteracoes\n", qtdIteracoes);
+    printf("Autovalores:\n");
+    printAutovalores(matriz, tamanho, 3);
+    printf("Autovetores:\n");
     printMatriz(V, tamanho, 3);
-
-    free(c);
-    free(s);
+    
     destruirMatriz(matriz, tamanho);
     destruirMatriz(V, tamanho);
+}
+
+int main()
+{
+    printf("Escolha uma opcao\n");
+    printf("\ta - Testar Tarefa A\n\tb - Testar Tarefa B\n\tc - Testar Tarefa C\n");
+    printf("\td - Aplicar Metodo QR\n");
+    printf("Opcao: ");
+    char entrada = 0;
+    scanf("%c", &entrada);
+    if (entrada == 'a')
+        tarefaA();
+    if (entrada == 'b')
+        tarefaB();
+    if (entrada == 'c')
+        tarefaC();
+    if (entrada == 'd')
+        aplicarMetodoQR();
     return 0;
 }
